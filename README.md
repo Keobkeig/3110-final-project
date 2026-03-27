@@ -3,7 +3,7 @@
 ## Team Members
 - [Richie Xue] ([rx77])
 - [Eric Chen] ([ec936])
-- [Jayden Lim ] ([jcl399])
+
 - [Colby Bittner] ([cb954])
 
 ## Project Description
