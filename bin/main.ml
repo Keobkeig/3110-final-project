@@ -3,10 +3,15 @@ let usage_lines =
     "Usage:";
     "  ocaml-autodiff diff \"<expr>\" \"x=1,y=2\"";
     "  ocaml-autodiff train [epochs] [learning_rate]";
+    "  ocaml-autodiff check-grad \"<expr>\" \"x=1\" x [eps] [abs_tol]";
+    "  ocaml-autodiff export-dot \"<expr>\" [path.dot]";
+    "  ocaml-autodiff train-adam [epochs]";
     "";
     "Examples:";
     "  ocaml-autodiff diff \"x*x + 3*x + 1\" \"x=2\"";
     "  ocaml-autodiff train 300 0.05";
+    "  ocaml-autodiff check-grad \"x*x\" \"x=2\" x 1e-6 1e-4";
+    "  ocaml-autodiff export-dot \"x*x + 1\" expr.dot";
   ]
 
 let rec print_lines lines =
@@ -138,6 +143,64 @@ let run_train args =
                 model.b ;
               0))
 
+let run_check_grad args =
+  match args with
+  | expr_text :: env_text :: var_name :: _rest ->
+      let _ = expr_text in
+      let _ = env_text in
+      let _ = var_name in
+      prerr_endline
+        "check-grad is a Sprint-B scaffold and is not implemented yet." ;
+      1
+  | _ ->
+      prerr_endline
+        "check-grad expects at least: <expr> <env> <var_name> [eps] [abs_tol]" ;
+      1
+
+let run_export_dot args =
+  match args with
+  | expr_text :: rest -> (
+      let output_path =
+        match rest with [] -> "expression.dot" | first :: _ -> first
+      in
+      match Ocaml_autodiff.Expr.parse expr_text with
+      | Error message ->
+          prerr_endline ("Parse error: " ^ message) ;
+          1
+      | Ok expr -> (
+          match
+            Ocaml_autodiff.Graphviz_export.write_expr_dot output_path expr
+          with
+          | Error message ->
+              prerr_endline ("DOT export error: " ^ message) ;
+              1
+          | Ok () ->
+              Printf.printf "Wrote DOT scaffold to %s\n" output_path ;
+              0))
+  | _ ->
+      prerr_endline "export-dot expects: <expr> [path.dot]" ;
+      1
+
+let run_train_adam args =
+  let epochs_text = maybe_head args "200" in
+  match parse_int epochs_text with
+  | Error message ->
+      prerr_endline ("Train-adam argument error: " ^ message) ;
+      1
+  | Ok epochs -> (
+      match
+        Ocaml_autodiff.Trainer.train_linear_adam ~epochs
+          ~config:Ocaml_autodiff.Trainer.default_adam_config
+          Ocaml_autodiff.Trainer.default_model
+          Ocaml_autodiff.Trainer.demo_samples
+      with
+      | Error message ->
+          prerr_endline ("Training error: " ^ message) ;
+          1
+      | Ok (_model, _history) ->
+          print_endline "train-adam completed" ;
+          0)
+
 let run_command argv =
   if Array.length argv < 2 then (
     print_usage () ;
@@ -156,6 +219,24 @@ let run_command argv =
         else Array.to_list (Array.sub argv 2 (Array.length argv - 2))
       in
       run_train args
+    else if command = "check-grad" then
+      let args =
+        if Array.length argv <= 2 then []
+        else Array.to_list (Array.sub argv 2 (Array.length argv - 2))
+      in
+      run_check_grad args
+    else if command = "export-dot" then
+      let args =
+        if Array.length argv <= 2 then []
+        else Array.to_list (Array.sub argv 2 (Array.length argv - 2))
+      in
+      run_export_dot args
+    else if command = "train-adam" then
+      let args =
+        if Array.length argv <= 2 then []
+        else Array.to_list (Array.sub argv 2 (Array.length argv - 2))
+      in
+      run_train_adam args
     else if command = "help" then (
       print_usage () ;
       0)

@@ -12,6 +12,17 @@ type model = { w : float; b : float }
 val predict : model -> float -> float
 (** [predict model x] computes [w * x + b]. *)
 
+type adam_config = {
+  learning_rate : float;
+  beta1 : float;
+  beta2 : float;
+  epsilon : float;
+}
+(** Hyperparameters for Adam optimization. *)
+
+val default_adam_config : adam_config
+(** [default_adam_config] contains baseline Adam hyperparameters. *)
+
 val mse_loss : model -> sample list -> float
 (** [mse_loss model samples] computes mean squared error on [samples]. Returns
     [0.] for an empty sample list. *)
@@ -33,3 +44,16 @@ val demo_samples : sample list
 
 val default_model : model
 (** [default_model] is the default initial model for demos. *)
+
+val train_linear_adam :
+  epochs:int ->
+  config:adam_config ->
+  model ->
+  sample list ->
+  (model * float list, string) result
+(** [train_linear_adam ~epochs ~config init samples] is a Sprint-B placeholder
+    for Adam-based training. Returns an error until implemented. *)
+
+val load_csv_samples : string -> (sample list, string) result
+(** [load_csv_samples path] is a Sprint-B placeholder for loading regression
+    datasets from CSV files. Returns an error until implemented. *)

@@ -1,6 +1,16 @@
 type sample = { x : float; y : float }
 type model = { w : float; b : float }
 
+type adam_config = {
+  learning_rate : float;
+  beta1 : float;
+  beta2 : float;
+  epsilon : float;
+}
+
+let default_adam_config =
+  { learning_rate = 0.001; beta1 = 0.9; beta2 = 0.999; epsilon = 1e-8 }
+
 let predict model x = (model.w *. x) +. model.b
 let sqr x = x *. x
 
@@ -80,3 +90,9 @@ let demo_samples =
   ]
 
 let default_model = { w = 0.0; b = 0.0 }
+
+let train_linear_adam ~epochs:_ ~config:_ _init_model _samples =
+  Error "train_linear_adam is not implemented yet; see Sprint-B TODO"
+
+let load_csv_samples _path =
+  Error "load_csv_samples is not implemented yet; see Sprint-B TODO"

@@ -12,5 +12,14 @@ module Expr : module type of Expr
 module Reverse_ad : module type of Reverse_ad
 (** Reverse-mode automatic differentiation. *)
 
+module Forward_ad : module type of Forward_ad
+(** Forward-mode automatic differentiation scaffolding. *)
+
+module Grad_check : module type of Grad_check
+(** Numerical gradient checking scaffolding. *)
+
+module Graphviz_export : module type of Graphviz_export
+(** Graph export scaffolding. *)
+
 module Trainer : module type of Trainer
 (** Gradient-based training utilities. *)
