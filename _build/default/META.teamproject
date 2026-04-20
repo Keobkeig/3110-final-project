@@ -1,6 +1,0 @@
-description = ""
-requires = ""
-archive(byte) = "teamproject.cma"
-archive(native) = "teamproject.cmxa"
-plugin(byte) = "teamproject.cma"
-plugin(native) = "teamproject.cmxs"
