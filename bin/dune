@@ -1,4 +1,4 @@
 (executable
- (public_name teamproject)
+ (public_name ocaml-autodiff)
  (name main)
- (libraries teamproject))
+ (libraries ocaml_autodiff))
