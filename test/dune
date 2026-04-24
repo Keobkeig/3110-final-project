@@ -5,3 +5,7 @@
 (test
  (name test_forward_ad)
  (libraries ocaml_autodiff ounit2))
+
+(test
+  (name test_grad_check)
+  (libraries ocaml_autodiff ounit2))

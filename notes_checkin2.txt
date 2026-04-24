@@ -1,0 +1,9 @@
+Eric Chen - Implemented visualization with graphvis
+Colby Bittner - Implemented testing of engine against numerical gradient approximation to prove it works
+Jayden Lim - Implemented forward pass partial differentiation engine
+Richie Xue - Implemented AST parsing and configured project. Implemented user CLI interaction and baseline project organization.
+
+
+Troubles: Bisect-ppx outdated and forcing recompile of other packages. 
+
+Make sure bisect works, check LoC with tool in team info document.
