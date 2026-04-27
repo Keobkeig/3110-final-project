@@ -1,4 +1,5 @@
 (library
  (public_name ocaml_autodiff)
  (name ocaml_autodiff)
- (instrumentation (backend bisect_ppx)))
+ (instrumentation
+  (backend bisect_ppx)))
