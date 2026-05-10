@@ -48,19 +48,34 @@ dune exec bin/main.exe -- forward-diff "x*y + exp(x)" "x=1,y=2"
 ### 3. Run Training Demo (SGD)
 ```bash
 dune exec bin/main.exe -- train 300 0.05
-# Or with a custom dataset (CSV with two columns: x,y):
+# Or with a small clean dataset (CSV with two columns: x,y):
 dune exec bin/main.exe -- train 300 0.05 data/y_eq_2x_plus_1.csv
+# Or with the larger noisy dataset (80 rows, true model y = 2.5x - 1.2 + noise):
+dune exec bin/main.exe -- train 2000 0.01 data/y_eq_2.5x_minus_1.2_noisy.csv
 ```
 
 ### 4. Run Training Demo (Adam)
 ```bash
 dune exec bin/main.exe -- train-adam 1000
-# Or with a custom dataset:
+# Or with a small clean dataset:
 dune exec bin/main.exe -- train-adam 5000 data/y_eq_3x_minus_2.csv
+# Or with the larger noisy dataset:
+dune exec bin/main.exe -- train-adam 2000 data/y_eq_2.5x_minus_1.2_noisy.csv
 ```
 
-Sample datasets are bundled under [data/](data/). CSV format is one
-`x,y` pair per line; blank lines are ignored.
+Sample datasets are bundled under [data/](data/). The clean datasets
+(`y_eq_2x_plus_1.csv`, `y_eq_3x_minus_2.csv`) are tiny and converge
+instantly; the noisy dataset (`y_eq_2.5x_minus_1.2_noisy.csv`) is 80
+points sampled around `y = 2.5x - 1.2` with Gaussian noise and is more
+representative of a real fitting problem. CSV format is one `x,y` pair
+per line; blank lines are ignored.
+
+Note: Adam uses a fixed learning rate of `0.01`, while SGD's learning
+rate is set on the command line. Adam's strength isn't raw speed on
+simple problems — well-tuned SGD will match it — but rather its
+adaptive per-parameter step size, which makes it robust on noisier
+or higher-dimensional problems where picking a single SGD learning
+rate is hard.
 
 ### 5. Export Visualization (requires 'graphviz')
 ```bash

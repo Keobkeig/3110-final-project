@@ -9,7 +9,7 @@ type adam_config = {
 }
 
 let default_adam_config =
-  { learning_rate = 0.001; beta1 = 0.9; beta2 = 0.999; epsilon = 1e-8 }
+  { learning_rate = 0.01; beta1 = 0.9; beta2 = 0.999; epsilon = 1e-8 }
 
 let predict model x = (model.w *. x) +. model.b
 let sqr x = x *. x
