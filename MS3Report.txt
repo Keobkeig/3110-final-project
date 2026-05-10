@@ -1,0 +1,41 @@
+# MS3 Progress Report: ocaml-autodiff
+
+**Team:** Richie Xue (rx77), Colby Bittner (cb954), Jayden Lim (jcl399), Eric Chen (ec_936)
+**Date:** May 9, 2026
+
+## Vision
+
+Our vision is to build a robust, idiomatic OCaml library for automatic differentiation (autodiff) that supports both reverse-mode and forward-mode techniques. Since MS1, we have sharpened our focus toward providing a developer-friendly CLI for rapid prototyping of differentiable expressions and a baseline training engine for simple machine learning models (e.g., linear regression). We aim to provide clear visualizations of computation graphs and verified gradient accuracy through numerical checking, making the library useful for both educational purposes and small-scale optimization tasks.
+
+## Summary of Progress
+
+Between MS2 and MS3, our team successfully transitioned from a working prototype to a polished and tested system ready for final submission. We expanded our test suites significantly across modules, including expression evaluation, forward-mode AD, gradient checking, the trainer, and Graphviz export — and integrated Bisect_ppx for code coverage reporting. The trainer module was substantially extended with loss history tracking and support for loading real CSV datasets, and we added two sample datasets to validate linear regression convergence. The Graphviz export module was refactored with improved op-focused node labeling and regression-tested against the new styling. The command-line interface was overhauled to support the full range of library features, including forward-mode differentiation and gradient checking commands, with improved error messaging throughout. Finally, all public-facing modules received complete OCamldoc documentation, and the README was updated to reflect current build instructions, CLI usage, and visualization workflows.
+
+## Activity Breakdown
+
+### Richie Xue (rx77)
+- **Responsibilities:** Project architecture, parsing, CLI development, reverse-mode engine, and sprint planning.
+- **Activities:** Authored the MS3 task board and coordinated sprint-C deliverables; integrated Bisect_ppx coverage tooling into the build system; updated README with current CLI usage, build instructions, and visualization workflows; attached MS2 report.
+- **Features Delivered:** Bisect coverage integration, `TASK_BOARD_SPRINT_C.md`, updated project documentation.
+- **Hours Spent:** 18 hours.
+
+### Jayden Lim (jcl399)
+- **Responsibilities:** Forward-mode differentiation, trainer extension, and test infrastructure.
+- **Activities:** Implemented the `gradient_expr` function using dual-number evaluation; expanded the trainer module with loss history tracking and CSV dataset support; created and updated test suites for the trainer and expression modules; updated `.mli` interface comments across `forward_ad`, `grad_check`, and `trainer`.
+- **Features Delivered:** `gradient_expr` in `Forward_ad`, extended `Trainer` module, `test_trainer.ml`, `test_expr.ml`, sample CSV datasets.
+- **Hours Spent:** 16 hours.
+
+### Colby Bittner (cb954)
+- **Responsibilities:** Gradient checking, CLI refinement, and test coverage.
+- **Activities:** Completed the `grad_check` implementation and authored a comprehensive OUnit2 test suite for gradient verification; overhauled the CLI with improved error messaging and added the `check-grad` command; documented decisions from check-in notes.
+- **Features Delivered:** Completed `Grad_check` module, `test_grad_check.ml`, updated `bin/main.ml` CLI.
+- **Hours Spent:** 12 hours.
+
+### Eric Chen (ec_936)
+- **Responsibilities:** Visualization, export utilities, and documentation.
+- **Activities:** Refactored Graphviz export with op-focused node labeling and improved graph styling; regression-tested the new implementation against prior behavior; expanded the test suite for `graphviz_export` to ~80% Bisect coverage; added full OCamldoc comments to the Graphviz interface.
+- **Features Delivered:** Refactored `Graphviz_export` module, `test_graphviz_export.ml`, `graphviz_export.mli` documentation.
+- **Hours Spent:** 16 hours.
+
+## Productivity Analysis
+As a team, we have been highly productive in the MS3 sprint, delivering all planned features and substantially exceeding our testing goals. Separating modules so well allowed us to work largely in parallel on the trainer, gradient checker, and Graphviz export respectively without significant merge conflicts. The CLI overhaul was more involved than expected, as surfacing meaningful error messages for all argument combinations required careful attention to the existing command usage pattern. For the final submission, we finished fleshing out the cli interface, ensured all public interfaces have complete OCamldoc coverage, and maximized bisect coverage to ensure our project works as expected. Our final codebase kept our initial goals of separation of code, resulting in a maintainable codebase for the future.
