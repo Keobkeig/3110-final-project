@@ -4,8 +4,6 @@ Move items from TODO -> IN PROGRESS -> DONE during standups.
 
 ## TODO
 
-- [ ] Wire `check-grad` CLI to `Grad_check.check_expr_gradient`.
-- [ ] Parse optional `eps` and `abs_tol` args in `check-grad` command.
 - [ ] Return explicit pass/fail output with clear exit status.
 - [ ] Decide `train_linear_adam` scope: implement or de-scope for MS3.
 - [ ] Decide `load_csv_samples` scope: implement or de-scope for MS3.
@@ -20,6 +18,8 @@ Move items from TODO -> IN PROGRESS -> DONE during standups.
 
 ## DONE
 
+- [x] Parse optional `eps` and `abs_tol` args in `check-grad` command.
+- [x] Wire `check-grad` CLI to `Grad_check.check_expr_gradient`.
 - [x] Forward mode (`Forward_ad.gradient_expr`) implemented.
 - [x] Numerical gradient checker (`Grad_check.check_expr_gradient`) implemented.
 - [x] Graph export core (`Graphviz_export.expr_to_dot`) implemented.

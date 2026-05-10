@@ -190,17 +190,68 @@ let run_train args =
 
 let run_check_grad args =
   match args with
-  | expr_text :: env_text :: var_name :: _rest ->
-      let _ = expr_text in
-      let _ = env_text in
-      let _ = var_name in
-      prerr_endline
-        "check-grad is a Sprint-B scaffold and is not implemented yet." ;
-      1
-  | _ ->
+  | [] | [ _ ] | [ _; _ ] ->
       prerr_endline
         "check-grad expects at least: <expr> <env> <var_name> [eps] [abs_tol]" ;
+      prerr_endline
+        "  expr     : arithmetic expression, e.g. \"x * x + sin(x)\"" ;
+      prerr_endline
+        "  env      : comma-separated variable bindings, e.g. \"x=1.0,y=2.0\"" ;
+      prerr_endline "  var_name : variable to differentiate with respect to" ;
+      prerr_endline "  eps      : finite-difference step size (default: 1e-5)" ;
+      prerr_endline "  abs_tol  : absolute tolerance (default: 1e-6)" ;
       1
+  | expr_text :: env_text :: var_name :: rest -> (
+      let eps_text = maybe_head rest "1e-5" in
+      let abs_tol_text = second_or_default rest "1e-6" in
+      match parse_env env_text with
+      | Error message ->
+          prerr_endline ("check-grad argument error: " ^ message) ;
+          prerr_endline
+            "  env must be comma-separated name=value pairs, e.g. \
+             \"x=1.0,y=2.0\"" ;
+          1
+      | Ok env -> (
+          match parse_float_value eps_text with
+          | Error _ ->
+              Printf.eprintf
+                "check-grad argument error: invalid eps %S (expected a \
+                 positive float)\n"
+                eps_text ;
+              1
+          | Ok eps -> (
+              match parse_float_value abs_tol_text with
+              | Error _ ->
+                  Printf.eprintf
+                    "check-grad argument error: invalid abs_tol %S (expected a \
+                     positive float)\n"
+                    abs_tol_text ;
+                  1
+              | Ok abs_tol -> (
+                  match Ocaml_autodiff.Expr.parse expr_text with
+                  | Error message ->
+                      prerr_endline ("check-grad parse error: " ^ message) ;
+                      1
+                  | Ok expr -> (
+                      match
+                        Ocaml_autodiff.Grad_check.check_expr_gradient expr env
+                          var_name eps abs_tol
+                      with
+                      | Error message ->
+                          prerr_endline ("check-grad error: " ^ message) ;
+                          1
+                      | Ok passed ->
+                          Printf.printf "Expression : %s\n" expr_text ;
+                          Printf.printf "Variable   : %s\n" var_name ;
+                          Printf.printf "Point      : %.8g\n"
+                            (match List.assoc_opt var_name env with
+                            | Some v -> v
+                            | None -> Float.nan) ;
+                          Printf.printf "Eps        : %.2e\n" eps ;
+                          Printf.printf "Abs tol    : %.2e\n" abs_tol ;
+                          Printf.printf "Result     : %s\n"
+                            (if passed then "PASS" else "FAIL") ;
+                          if passed then 0 else 1)))))
 
 let run_export_dot args =
   match args with
